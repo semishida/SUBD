@@ -12,7 +12,7 @@ func main() {
 
 	var filename string
 
-	// Делаем ввод
+	// Ввод данных
 	fmt.Print("Укажите имя файла: ")
 	scan := bufio.NewScanner(os.Stdin)
 	if scan.Scan() {

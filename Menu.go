@@ -11,7 +11,7 @@ func menuSet(set *Set, scanner *bufio.Scanner, filename string) {
 		fmt.Println("1. Добавление (SADD)")
 		fmt.Println("2. Удаление (SREM)")
 		fmt.Println("3. Чтение (SISMEMBER)")
-		fmt.Println("4. Вернуться в главное меню")
+		fmt.Println("4. Отмена")
 
 		if !scanner.Scan() {
 			break
@@ -21,19 +21,19 @@ func menuSet(set *Set, scanner *bufio.Scanner, filename string) {
 
 		switch action {
 		case "1":
-			fmt.Print("Введите элемент для добавления: ")
+			fmt.Print("Добавим элемент: ")
 			if scanner.Scan() {
 				element := scanner.Text()
 				set.SADD(filename, element)
 			}
 		case "2":
-			fmt.Print("Введите элемент для удаления: ")
+			fmt.Print("Удалим элемент: ")
 			if scanner.Scan() {
 				element := scanner.Text()
 				set.SREM(filename, element)
 			}
 		case "3":
-			fmt.Print("Введите элемент для чтения: ")
+			fmt.Print("Читаем элемент: ")
 			if scanner.Scan() {
 				element := scanner.Text()
 				if set.SISMEMBER(filename, element) {
@@ -45,7 +45,7 @@ func menuSet(set *Set, scanner *bufio.Scanner, filename string) {
 		case "4":
 			return
 		default:
-			fmt.Println("Неверный выбор. Пожалуйста, выберите снова.")
+			fmt.Println("Выбор некорректен, попробуйте снова, пожалуйста.")
 		}
 	}
 }
@@ -55,7 +55,7 @@ func menuStack(stack *Stack, scanner *bufio.Scanner, filename string) {
 		fmt.Println("\nВыберите действие для стека:")
 		fmt.Println("1. Добавление (SPUSH)")
 		fmt.Println("2. Удаление (SPOP)")
-		fmt.Println("3. Вернуться в главное меню")
+		fmt.Println("3. Отмена.")
 
 		if !scanner.Scan() {
 			break
@@ -65,7 +65,7 @@ func menuStack(stack *Stack, scanner *bufio.Scanner, filename string) {
 
 		switch action {
 		case "1":
-			fmt.Print("Введите элемент для добавления в стек: ")
+			fmt.Print("Добавим элемент в Стек: ")
 			if scanner.Scan() {
 				element := scanner.Text()
 				stack.SPUSH(filename, element)
@@ -73,12 +73,12 @@ func menuStack(stack *Stack, scanner *bufio.Scanner, filename string) {
 		case "2":
 			_, err := stack.SPOP(filename)
 			if err != nil {
-				fmt.Println("Стек пуст.")
+				fmt.Println("В Стеке нет элементов.")
 			}
 		case "3":
 			return
 		default:
-			fmt.Println("Неверный выбор. Пожалуйста, выберите снова.")
+			fmt.Println("Выбор некорректен, попробуйте снова, пожалуйста.")
 		}
 	}
 }
@@ -88,7 +88,7 @@ func menuQueue(queue *Queue, scanner *bufio.Scanner, filename string) {
 		fmt.Println("\nВыберите действие для очереди:")
 		fmt.Println("1. Добавление (QPUSH)")
 		fmt.Println("2. Удаление (QPOP)")
-		fmt.Println("3. Вернуться в главное меню")
+		fmt.Println("3. Отмена.")
 
 		if !scanner.Scan() {
 			break
@@ -98,7 +98,7 @@ func menuQueue(queue *Queue, scanner *bufio.Scanner, filename string) {
 
 		switch action {
 		case "1":
-			fmt.Print("Введите элемент для добавления в очередь: ")
+			fmt.Print("Добавим элемент в очередь: ")
 			if scanner.Scan() {
 				element := scanner.Text()
 				queue.QPUSH(filename, element)
@@ -111,7 +111,7 @@ func menuQueue(queue *Queue, scanner *bufio.Scanner, filename string) {
 		case "3":
 			return
 		default:
-			fmt.Println("Неверный выбор. Пожалуйста, выберите снова.")
+			fmt.Println("Выбор некорректен, попробуйте снова, пожалуйста.")
 		}
 	}
 }
@@ -122,7 +122,7 @@ func menuHashTable(table *HashTable, scanner *bufio.Scanner, filename string) {
 		fmt.Println("1. Добавление (HSET)")
 		fmt.Println("2. Удаление (HDEL)")
 		fmt.Println("3. Чтение (HGET)")
-		fmt.Println("4. Вернуться в главное меню")
+		fmt.Println("4. Отмена")
 
 		if !scanner.Scan() {
 			break
@@ -132,7 +132,7 @@ func menuHashTable(table *HashTable, scanner *bufio.Scanner, filename string) {
 
 		switch action {
 		case "1":
-			fmt.Print("Введите ключ для добавления: ")
+			fmt.Print("Добавим следующий ключ: ")
 			if scanner.Scan() {
 				key := scanner.Text()
 				fmt.Print("Введите значение: ")
@@ -142,13 +142,13 @@ func menuHashTable(table *HashTable, scanner *bufio.Scanner, filename string) {
 				}
 			}
 		case "2":
-			fmt.Print("Введите ключ для удаления: ")
+			fmt.Print("Ключ для удаления: ")
 			if scanner.Scan() {
 				key := scanner.Text()
 				table.HDEL(filename, key)
 			}
 		case "3":
-			fmt.Print("Введите ключ для чтения: ")
+			fmt.Print("Ключ для чтения: ")
 			if scanner.Scan() {
 				key := scanner.Text()
 				value, err := table.HGET(filename, key)
@@ -161,7 +161,7 @@ func menuHashTable(table *HashTable, scanner *bufio.Scanner, filename string) {
 		case "4":
 			return
 		default:
-			fmt.Println("Неверный выбор. Пожалуйста, выберите снова.")
+			fmt.Println("Выбор некорректен, попробуйте снова, пожалуйста.")
 		}
 	}
 }

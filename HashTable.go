@@ -38,13 +38,13 @@ func (ht *HashTable) HSET(filename, key, value string) {
 	// Проверяем уникальность ключа и хэша в памяти программы
 	index := ht.hash(key)
 	if ht.exists(key, index) {
-		fmt.Println("Ключ уже существует в памяти программы:", key)
+		fmt.Println("Ключ найден в памяти программы:", key)
 		return
 	}
 
 	// Проверяем уникальность ключа в файле
 	if fileContainsKey(filename, key) {
-		fmt.Println("Ключ уже существует в файле:", key)
+		fmt.Println("Указанный ключ уже существует:", key)
 		return
 	}
 
@@ -75,7 +75,7 @@ func (ht *HashTable) HSET(filename, key, value string) {
 		current.next = newNode
 	}
 
-	fmt.Println("Добавлено в HashTable:", key)
+	fmt.Println("В Хэш-таблицу добавлено:", key)
 }
 
 // Функция для проверки уникальности ключа и хэша в памяти программы
@@ -123,7 +123,7 @@ func (ht *HashTable) HGET(filename, key string) (string, error) {
 	// Попробуем сначала найти ключ в файле
 	file, err := os.Open(filename)
 	if err != nil {
-		fmt.Println("Ошибка при открытии файла:", err)
+		fmt.Println("Ошибка открытия файла:", err)
 		return "", err
 	}
 	defer file.Close()
@@ -187,7 +187,7 @@ func (ht *HashTable) HDEL(filename, key string) {
 	// Теперь удалим из файла
 	lines, err := readLines(filename)
 	if err != nil {
-		fmt.Println("Ошибка при чтении из файла:", err)
+		fmt.Println("Ошибка при чтении файла:", err)
 		return
 	}
 
