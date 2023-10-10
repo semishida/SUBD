@@ -62,7 +62,8 @@ func (s *Stack) SPOP(filename string) (string, error) {
 	// Создаем слайс для обновленных строк
 	updatedLines := make([]string, 0)
 
-	for _, line := range lines {
+	for i := len(lines) - 1; i >= 0; i-- {
+		line := lines[i]
 		if !found && strings.HasPrefix(line, "Stack: {") && strings.HasSuffix(line, "}") {
 			deletedLine = line // Сохраняем удаленную строку
 			found = true
@@ -73,6 +74,11 @@ func (s *Stack) SPOP(filename string) (string, error) {
 
 	if !found {
 		return "", errors.New("Строка в формате 'Stack: {...}' не найдена в файле")
+	}
+
+	// Разворачиваем обновленные строки, чтобы вернуть их в исходный порядок
+	for i, j := 0, len(updatedLines)-1; i < j; i, j = i+1, j-1 {
+		updatedLines[i], updatedLines[j] = updatedLines[j], updatedLines[i]
 	}
 
 	err = writeLines(filename, updatedLines)

@@ -8,17 +8,17 @@ import (
 )
 
 func main() {
-	fmt.Println("Начнём работу с данными!")
+	fmt.Println("Добро пожаловать в программу для работы с данными!")
 
 	var filename string
 
-	// Ввод данных
-	fmt.Print("Укажите имя файла: ")
+	// Запрос на ввод имени файла у пользователя
+	fmt.Print("Введите имя файла: ")
 	scan := bufio.NewScanner(os.Stdin)
 	if scan.Scan() {
 		filename = scan.Text()
 	} else {
-		fmt.Println("Возникла ошибка обработки или чтения файла.", scan.Err())
+		fmt.Println("Ошибка при чтении ввода пользователя:", scan.Err())
 		return
 	}
 
@@ -29,8 +29,8 @@ func main() {
 		stack Stack
 		queue Queue
 		table = HashTable{
-			data:     make([]*NodeHT, 1000),
-			capacity: 1000,
+			data:     make([]*NodeHT, 5),
+			capacity: 5,
 			mu:       sync.Mutex{},
 		}
 	)
@@ -41,7 +41,7 @@ func main() {
 		fmt.Println("2. Стек")
 		fmt.Println("3. Очередь")
 		fmt.Println("4. Хэш-таблица")
-		fmt.Println("5. Выход и завершение работы")
+		fmt.Println("5. Выход из программы")
 
 		if !scanner.Scan() {
 			break
@@ -62,7 +62,7 @@ func main() {
 			fmt.Println("Выход из программы.")
 			os.Exit(0)
 		default:
-			fmt.Println("Указанной функции не существует")
+			fmt.Println("Неверный выбор. Пожалуйста, выберите снова.")
 		}
 	}
 }

@@ -69,32 +69,27 @@ func (q *Queue) QPOP(filename string) (string, error) {
 	lines, err := readLines(filename)
 	if err != nil {
 		fmt.Println("Ошибка при чтении из файла:", err)
-		return "", nil
+		return "", err
 	}
 
-	queueLines := make([]string, 0)
-	for _, line := range lines {
-		if strings.HasPrefix(line, "Queue: {") && strings.HasSuffix(line, "}") {
-			queueLines = append(queueLines, line)
-		}
-	}
-
-	if len(queueLines) == 0 {
-		fmt.Println("Очередь пуста.")
-		return "", nil
-	}
-
-	// Если есть строки в формате "Queue: {...}" в файле, удаляем их
-	updatedLines := make([]string, 0)
+	var found bool
 	var deletedLine string // Для хранения удаленной строки
 
+	// Создаем слайс для обновленных строк
+	updatedLines := make([]string, 0)
+
 	for _, line := range lines {
-		if !(strings.HasPrefix(line, "Queue: {") && strings.HasSuffix(line, "}")) {
-			// Если строка не соответствует формату "Queue: {...}", оставляем её в файле
-			updatedLines = append(updatedLines, line)
-		} else {
+		if !found && strings.HasPrefix(line, "Queue: {") && strings.HasSuffix(line, "}") {
 			deletedLine = line // Сохраняем удаленную строку
+			found = true
+			continue
 		}
+		updatedLines = append(updatedLines, line)
+	}
+
+	if !found {
+		fmt.Println("Очередь пуста.")
+		return "", nil
 	}
 
 	err = writeLines(filename, updatedLines)

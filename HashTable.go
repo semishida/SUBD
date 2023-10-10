@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 )
@@ -38,13 +39,19 @@ func (ht *HashTable) HSET(filename, key, value string) {
 	// Проверяем уникальность ключа и хэша в памяти программы
 	index := ht.hash(key)
 	if ht.exists(key, index) {
-		fmt.Println("Ключ найден в памяти программы:", key)
+		fmt.Println("Ключ уже существует в памяти программы:", key)
 		return
 	}
 
 	// Проверяем уникальность ключа в файле
 	if fileContainsKey(filename, key) {
-		fmt.Println("Указанный ключ уже существует:", key)
+		fmt.Println("Ключ уже существует в файле:", key)
+		return
+	}
+
+	// Проверяем наличие элементов с тем же хешем в файле
+	if fileContainsHash(filename, index) {
+		fmt.Println("Коллизия: элемент с таким же хешем уже существует в файле:", key)
 		return
 	}
 
@@ -75,7 +82,38 @@ func (ht *HashTable) HSET(filename, key, value string) {
 		current.next = newNode
 	}
 
-	fmt.Println("В Хэш-таблицу добавлено:", key)
+	fmt.Println("Добавлено в HashTable:", key)
+}
+
+// Функция для проверки наличия элементов с тем же хешем в файле
+func fileContainsHash(filename string, hash int) bool {
+	file, err := os.Open(filename)
+	if err != nil {
+		return false // Если ошибка при открытии файла, считаем, что элементов с таким хешем в файле нет
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "HashTable: {") && strings.HasSuffix(line, "}") {
+			// Извлекаем содержимое внутри фигурных скобок
+			content := line[len("HashTable: {") : len(line)-1]
+			// Разбиваем содержимое по двоеточию
+			parts := strings.Split(content, ":")
+			if len(parts) == 3 {
+				h, err := strconv.Atoi(parts[2])
+				if err != nil {
+					continue
+				}
+				if h == hash {
+					return true // Найден элемент с таким же хешем
+				}
+			}
+		}
+	}
+
+	return false // Элементов с таким хешем в файле нет
 }
 
 // Функция для проверки уникальности ключа и хэша в памяти программы
@@ -123,7 +161,7 @@ func (ht *HashTable) HGET(filename, key string) (string, error) {
 	// Попробуем сначала найти ключ в файле
 	file, err := os.Open(filename)
 	if err != nil {
-		fmt.Println("Ошибка открытия файла:", err)
+		fmt.Println("Ошибка при открытии файла:", err)
 		return "", err
 	}
 	defer file.Close()
@@ -187,7 +225,7 @@ func (ht *HashTable) HDEL(filename, key string) {
 	// Теперь удалим из файла
 	lines, err := readLines(filename)
 	if err != nil {
-		fmt.Println("Ошибка при чтении файла:", err)
+		fmt.Println("Ошибка при чтении из файла:", err)
 		return
 	}
 
